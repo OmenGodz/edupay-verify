@@ -12,6 +12,10 @@ export const cashierNav = [
   { label: "Reports", path: "/reports", icon: "chart" },
 ];
 
+export const teacherNav = [
+  { label: "Exam Proctor", path: "/teacher", icon: "qr" },
+];
+
 export const superAdminNav = [
   { label: "Dashboard", path: "/super-admin", icon: "home" },
   { label: "User Management", path: "/user-management", icon: "users" },
@@ -22,6 +26,7 @@ export const superAdminNav = [
 export const getNavForRole = (role) => {
   if (role === "student") return studentNav;
   if (role === "cashier") return cashierNav;
+  if (role === "teacher") return teacherNav;
   if (role === "super_admin") return superAdminNav;
   return [];
 };

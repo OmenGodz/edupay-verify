@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.0",
+    "@zxing/browser": "^0.2.0",
     "axios": "^1.17.0",
     "cloudinary": "^1.41.3",
     "multer": "^2.1.1",

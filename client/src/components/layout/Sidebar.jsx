@@ -7,6 +7,7 @@ import {
   IconBell,
   IconTicket,
   IconCheckCircle,
+  IconQrCode,
   IconBarChart,
   IconLogOut,
   IconX,
@@ -18,6 +19,7 @@ const iconMap = {
   bell: IconBell,
   ticket: IconTicket,
   check: IconCheckCircle,
+  qr: IconQrCode,
   chart: IconBarChart,
 };
 

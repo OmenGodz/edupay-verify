@@ -12,6 +12,7 @@ import Notifications from "./pages/Notifications";
 import ExamPermit from "./pages/ExamPermit";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import UserManagement from "./pages/UserManagement";
+import TeacherProctor from "./pages/TeacherProctor";
 
 function App() {
   return (
@@ -63,6 +64,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["cashier"]}>
                 <CashierDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/teacher"
+            element={
+              <ProtectedRoute allowedRoles={["teacher"]}>
+                <TeacherProctor />
               </ProtectedRoute>
             }
           />

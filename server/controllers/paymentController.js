@@ -4,6 +4,12 @@ require("../services/ocrService");
 const Payment =
   require("../Models/Payments");
 
+const ExamPermit =
+  require("../Models/ExamPermit");
+
+const User =
+  require("../Models/User");
+
   const Notification =
 require(
 "../Models/Notification"
@@ -16,6 +22,15 @@ const createPayment =
 async (req, res) => {
 
   try {
+
+    const account =
+      await User.findById(req.user.id);
+
+    if (!account || account.role !== "student") {
+      return res.status(403).json({
+        message: "Only students can submit receipts.",
+      });
+    }
 
     const text =
         await extractText(
@@ -47,10 +62,19 @@ text.match(
 /STUDENT\s*ID[: ]+([0-9\-]+)/i
 );
 
-const studentId =
+const extractedStudentId =
 studentMatch
 ? studentMatch[1]
-: (req.body.studentId || "");
+: "";
+
+if (extractedStudentId && extractedStudentId !== account.studentId) {
+  return res.status(400).json({
+    message: "Receipt student ID does not match your account.",
+  });
+}
+
+const studentId =
+account.studentId || req.body.studentId || "";
 
 console.log(
   "Student:",
@@ -95,7 +119,7 @@ await Payment.create({
   studentId,
 
   studentName:
-  req.body.studentName,
+  account.name || req.body.studentName,
 
   invoiceNumber:
   invoiceNumber,
@@ -105,6 +129,9 @@ await Payment.create({
 
   paymentDescription:
   req.body.paymentDescription,
+
+  examCoverage:
+  req.body.examCoverage,
 
   receiptImage:
   req.file.path,
@@ -120,10 +147,10 @@ await Payment.create({
     // Notify cashiers about new receipt submission
     await Notification.create({
       studentId: studentId,
-      studentName: req.body.studentName,
+      studentName: account.name || req.body.studentName,
       recipientRole: "cashier",
       title: "New Receipt Submitted",
-      message: `${req.body.studentName} (${studentId}) submitted a receipt for ${req.body.paymentDescription || "payment"}.`,
+      message: `${account.name || req.body.studentName} (${studentId}) submitted a receipt for ${req.body.paymentDescription || "payment"}.`,
     });
 
     res.status(201).json(
@@ -144,8 +171,20 @@ const getPayments =
   async (req, res) => {
     try {
 
+      const query = {};
+
+      if (req.user.role === "student") {
+        const account =
+          await User.findById(req.user.id);
+        query.studentId = account?.studentId;
+      } else if (!["cashier", "super_admin"].includes(req.user.role)) {
+        return res.status(403).json({
+          message: "Access Denied",
+        });
+      }
+
       const payments =
-        await Payment.find();
+        await Payment.find(query);
 
       res.json(payments);
 
@@ -159,7 +198,7 @@ const getPayments =
     }
   };
 
-  const approvePayment =
+const approvePayment =
 async (req, res) => {
 
   try {
@@ -168,6 +207,12 @@ async (req, res) => {
       await Payment.findById(
         req.params.id
       );
+
+    if (!payment) {
+      return res.status(404).json({
+        message: "Payment not found",
+      });
+    }
 
     payment.status =
       "Approved";
@@ -215,6 +260,43 @@ async (req, res) => {
       ledger.preFinal = true;
       ledger.final = true;
 
+    }
+
+    if (payment.examCoverage) {
+      const coverageMap = {
+        Prelim: "prelim",
+        Midterm: "midterm",
+        PreFinal: "preFinal",
+        Final: "final",
+      };
+
+      const ledgerField = coverageMap[payment.examCoverage];
+      if (ledgerField) {
+        ledger[ledgerField] = true;
+      }
+
+      const crypto = require("crypto");
+      await ExamPermit.findOneAndUpdate(
+        {
+          studentId: payment.studentId,
+          examType: payment.examCoverage,
+        },
+        {
+          $set: {
+            studentName: payment.studentName,
+            paymentId: payment._id,
+            permitStatus: "Valid",
+          },
+          $setOnInsert: {
+            qrToken: crypto.randomBytes(24).toString("hex"),
+            proctorDecision: "Pending",
+          },
+        },
+        {
+          upsert: true,
+          new: true,
+        }
+      );
     }
 
     await ledger.save();

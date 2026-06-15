@@ -30,12 +30,14 @@ const router =
 
 router.post(
 "/",
+protect,
 upload.single("receipt"),
 createPayment
 );
 
 router.get(
   "/",
+  protect,
   getPayments
 );
 

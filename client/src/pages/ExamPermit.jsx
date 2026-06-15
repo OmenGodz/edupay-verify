@@ -3,6 +3,7 @@ import { useAuth } from "../hooks/useAuth";
 import {
   getEligibility,
   generateQR,
+  getStudentPermits,
 } from "../api/eligibilityApi";
 import PageHeader from "../components/ui/PageHeader";
 import Skeleton from "../components/ui/Skeleton";
@@ -14,10 +15,10 @@ import {
 } from "../components/icons/Icons";
 
 const EXAM_PERIODS = [
-  { key: "prelim", label: "Prelim" },
-  { key: "midterm", label: "Midterm" },
-  { key: "preFinal", label: "Pre-Final" },
-  { key: "final", label: "Final" },
+  { key: "prelim", label: "Prelim", apiValue: "Prelim" },
+  { key: "midterm", label: "Midterm", apiValue: "Midterm" },
+  { key: "preFinal", label: "Pre-Final", apiValue: "PreFinal" },
+  { key: "final", label: "Final", apiValue: "Final" },
 ];
 
 const ExamPermit = () => {
@@ -27,6 +28,7 @@ const ExamPermit = () => {
   const [eligibility, setEligibility] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [permits, setPermits] = useState([]);
   const [qrData, setQrData] = useState(null);
   const [qrLoading, setQrLoading] = useState(false);
   const [selectedExam, setSelectedExam] = useState(null);
@@ -36,8 +38,12 @@ const ExamPermit = () => {
 
     const fetch = async () => {
       try {
-        const data = await getEligibility(studentId);
-        setEligibility(data);
+        const [eligibilityData, permitData] = await Promise.all([
+          getEligibility(studentId),
+          getStudentPermits(studentId),
+        ]);
+        setEligibility(eligibilityData);
+        setPermits(permitData);
         setError("");
       } catch {
         /* Ledger may not exist yet — treat as all false */
@@ -61,7 +67,8 @@ const ExamPermit = () => {
     setQrLoading(true);
     setQrData(null);
     try {
-      const data = await generateQR(studentId, examKey);
+      const examType = EXAM_PERIODS.find((e) => e.key === examKey)?.apiValue;
+      const data = await generateQR(studentId, examType);
       setQrData(data.qr);
     } catch {
       setError("Could not generate QR code.");
@@ -155,8 +162,9 @@ const ExamPermit = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2">
-            {EXAM_PERIODS.map(({ key, label }) => {
-              const valid = eligibility?.[key] ?? false;
+            {EXAM_PERIODS.map(({ key, label, apiValue }) => {
+              const permit = permits.find((p) => p.examType === apiValue);
+              const valid = (eligibility?.[key] ?? false) && !!permit;
 
               return (
                 <div
@@ -185,8 +193,13 @@ const ExamPermit = () => {
                       <p
                         className={`text-xs font-semibold ${valid ? "text-sti-blue" : "text-gray-400"}`}
                       >
-                        {valid ? "Eligible" : "Not Eligible"}
+                        {valid ? "Permit Ready" : "Not Eligible"}
                       </p>
+                      {permit?.proctorDecision && (
+                        <p className="text-[11px] font-semibold text-gray-400">
+                          Proctor: {permit.proctorDecision}
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -223,8 +236,10 @@ const ExamPermit = () => {
         <div className="space-y-6 p-6">
           {/* Exam period selector */}
           <div className="flex flex-wrap gap-3">
-            {EXAM_PERIODS.map(({ key, label }) => {
-              const valid = eligibility?.[key] ?? false;
+            {EXAM_PERIODS.map(({ key, label, apiValue }) => {
+              const valid =
+                (eligibility?.[key] ?? false) &&
+                permits.some((p) => p.examType === apiValue);
               return (
                 <button
                   key={key}

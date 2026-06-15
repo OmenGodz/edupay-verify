@@ -6,6 +6,7 @@ const pageTitles = {
   "/reports": "Reports",
   "/notifications": "Notifications",
   "/permit": "Exam Permit",
+  "/teacher": "Exam Proctor",
   "/super-admin": "Super Admin Dashboard",
   "/user-management": "User Management",
 };

@@ -16,6 +16,7 @@ const UploadReceipt = () => {
   const [preview, setPreview] = useState(null);
   const [studentName, setStudentName] = useState(user?.name ?? "");
   const [paymentDescription, setPaymentDescription] = useState("");
+  const [examCoverage, setExamCoverage] = useState("");
   const [dragOver, setDragOver] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -59,6 +60,10 @@ const UploadReceipt = () => {
       setError("Please describe what this payment is for.");
       return;
     }
+    if (!examCoverage) {
+      setError("Please select the exam period covered by this payment.");
+      return;
+    }
 
     setLoading(true);
 
@@ -68,6 +73,7 @@ const UploadReceipt = () => {
       formData.append("studentId", studentId);
       formData.append("studentName", studentName.trim());
       formData.append("paymentDescription", paymentDescription.trim());
+      formData.append("examCoverage", examCoverage);
 
       await uploadPayment(formData);
 
@@ -148,6 +154,25 @@ const UploadReceipt = () => {
               placeholder="e.g. Tuition - Midterm"
               className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20 disabled:opacity-60"
             />
+          </div>
+
+          <div>
+            <label htmlFor="examCoverage" className="mb-1.5 block text-sm font-medium text-gray-700">
+              Exam Period <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="examCoverage"
+              value={examCoverage}
+              onChange={(e) => setExamCoverage(e.target.value)}
+              disabled={loading}
+              className="min-h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20 disabled:opacity-60"
+            >
+              <option value="">Select exam period</option>
+              <option value="Prelim">Prelim</option>
+              <option value="Midterm">Midterm</option>
+              <option value="PreFinal">Pre-Final</option>
+              <option value="Final">Final</option>
+            </select>
           </div>
 
           <div>
