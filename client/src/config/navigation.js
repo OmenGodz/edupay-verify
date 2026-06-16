@@ -1,6 +1,7 @@
 export const studentNav = [
   { label: "Dashboard", path: "/student", icon: "home" },
   { label: "Upload Receipt", path: "/upload", icon: "upload" },
+  { label: "Payment History", path: "/history", icon: "inbox" },
   { label: "Notifications", path: "/notifications", icon: "bell" },
   { label: "Exam Permit", path: "/permit", icon: "ticket" },
 ];

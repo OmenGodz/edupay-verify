@@ -7,6 +7,7 @@ import {
 } from "../api/eligibilityApi";
 import PageHeader from "../components/ui/PageHeader";
 import Skeleton from "../components/ui/Skeleton";
+import Modal from "../components/ui/Modal";
 import {
   IconShield,
   IconShieldX,
@@ -32,6 +33,7 @@ const ExamPermit = () => {
   const [qrData, setQrData] = useState(null);
   const [qrLoading, setQrLoading] = useState(false);
   const [selectedExam, setSelectedExam] = useState(null);
+  const [selectedPermitForModal, setSelectedPermitForModal] = useState(null);
 
   useEffect(() => {
     if (!studentId) return;
@@ -205,10 +207,15 @@ const ExamPermit = () => {
 
                   {/* Badge */}
                   <span
+                    onClick={() => {
+                      if (valid) {
+                        setSelectedPermitForModal({ permit, label });
+                      }
+                    }}
                     className={[
-                      "inline-flex rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider shadow-sm",
+                      "inline-flex rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider shadow-sm transition-colors",
                       valid
-                        ? "bg-sti-blue/10 text-sti-blue"
+                        ? "cursor-pointer hover:bg-sti-blue hover:text-white bg-sti-blue/10 text-sti-blue"
                         : "bg-gray-100 text-gray-400",
                     ].join(" ")}
                   >
@@ -304,6 +311,91 @@ const ExamPermit = () => {
             )}
         </div>
       </div>
+
+      {/* Proctor Authorization Modal */}
+      <Modal
+        isOpen={!!selectedPermitForModal}
+        onClose={() => setSelectedPermitForModal(null)}
+        title="Exam Permit Status"
+      >
+        {selectedPermitForModal && selectedPermitForModal.permit && (
+          <div className="space-y-4">
+            <div className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-xl border border-gray-100 text-center">
+              {selectedPermitForModal.permit.proctorDecision === "Approved" ? (
+                <>
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-600 mb-3 shadow-sm">
+                    <IconShield className="h-6 w-6" />
+                  </div>
+                  <h4 className="font-bold text-gray-800 text-lg">Permit Authorized</h4>
+                  <p className="text-sm text-green-600 font-semibold mt-1">
+                    Entry Approved
+                  </p>
+                </>
+              ) : selectedPermitForModal.permit.proctorDecision === "Rejected" ? (
+                <>
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600 mb-3 shadow-sm">
+                    <IconShieldX className="h-6 w-6" />
+                  </div>
+                  <h4 className="font-bold text-gray-800 text-lg">Entry Denied</h4>
+                  <p className="text-sm text-red-600 font-semibold mt-1">
+                    Please see your proctor
+                  </p>
+                </>
+              ) : (
+                 <>
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-sti-blue mb-3 shadow-sm">
+                    <IconQrCode className="h-6 w-6" />
+                  </div>
+                  <h4 className="font-bold text-gray-800 text-lg">Permit Ready</h4>
+                  <p className="text-sm text-blue-600 font-semibold mt-1">
+                    Pending Teacher Scan
+                  </p>
+                </>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+               <div className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm">
+                 <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Term</label>
+                 <p className="text-sm font-semibold text-gray-800">{selectedPermitForModal.label}</p>
+               </div>
+               
+               {selectedPermitForModal.permit.proctorDecision && selectedPermitForModal.permit.proctorDecision !== "Pending" && (
+                 <>
+                   <div className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm col-span-2">
+                     <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Authorized By</label>
+                     <p className="text-sm font-semibold text-gray-800">
+                       {selectedPermitForModal.permit.proctorTeacherName || "Teacher / Proctor"}
+                     </p>
+                   </div>
+                   
+                   <div className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm col-span-2">
+                     <label className="block text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Scan Time</label>
+                     <p className="text-sm font-semibold text-gray-800">
+                       {selectedPermitForModal.permit.proctorDecidedAt 
+                         ? new Date(selectedPermitForModal.permit.proctorDecidedAt).toLocaleString(undefined, {
+                             dateStyle: "medium",
+                             timeStyle: "short",
+                           })
+                         : "Unknown time"}
+                     </p>
+                   </div>
+                 </>
+               )}
+            </div>
+            
+            <div className="mt-6">
+              <button 
+                onClick={() => setSelectedPermitForModal(null)}
+                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2.5 rounded-lg transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
     </div>
   );
 };

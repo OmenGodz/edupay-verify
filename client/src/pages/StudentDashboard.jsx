@@ -8,6 +8,7 @@ import DashboardCard from "../components/ui/DashboardCard";
 import StatusBadge from "../components/ui/StatusBadge";
 import EmptyState from "../components/ui/EmptyState";
 import Skeleton from "../components/ui/Skeleton";
+import PaymentDetailsModal from "../components/ui/PaymentDetailsModal";
 import {
   IconUpload,
   IconBell,
@@ -32,6 +33,7 @@ const StudentDashboard = () => {
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedPayment, setSelectedPayment] = useState(null);
 
   useEffect(() => {
     const fetchPayments = async () => {
@@ -140,11 +142,11 @@ const StudentDashboard = () => {
           <h2 className="text-lg font-bold text-gray-800">Recent Payment Activity</h2>
           <button
             type="button"
-            onClick={() => navigate("/notifications")}
+            onClick={() => navigate("/history")}
             className="text-xs font-bold text-sti-blue transition hover:text-sti-blue-light focus:outline-none focus:ring-2 focus:ring-sti-blue/20 rounded px-1"
-            aria-label="View all notifications"
+            aria-label="View all history"
           >
-            View notifications →
+            View all history →
           </button>
         </div>
 
@@ -184,12 +186,21 @@ const StudentDashboard = () => {
                     {payment.amount ? ` · ₱${payment.amount}` : ""}
                   </p>
                 </div>
-                <StatusBadge status={payment.status} />
+                <StatusBadge 
+                  status={payment.status} 
+                  onClick={payment.status === "Approved" ? () => setSelectedPayment(payment) : undefined} 
+                />
               </li>
             ))}
           </ul>
         )}
       </div>
+      
+      <PaymentDetailsModal 
+        isOpen={!!selectedPayment}
+        onClose={() => setSelectedPayment(null)}
+        payment={selectedPayment}
+      />
     </div>
   );
 };

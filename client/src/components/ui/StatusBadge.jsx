@@ -5,9 +5,14 @@ const statusStyles = {
   "Need Review": "bg-sti-gold/20 text-sti-blue",
 };
 
-const StatusBadge = ({ status }) => (
+const StatusBadge = ({ status, onClick }) => (
   <span
-    className={`inline-flex rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider shadow-sm ${statusStyles[status] ?? "bg-gray-100 text-gray-600"}`}
+    onClick={onClick}
+    className={[
+      "inline-flex rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider shadow-sm transition",
+      statusStyles[status] ?? "bg-gray-100 text-gray-600",
+      onClick ? "cursor-pointer hover:opacity-80" : ""
+    ].join(" ")}
   >
     {status ?? "Unknown"}
   </span>

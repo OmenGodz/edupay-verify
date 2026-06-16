@@ -10,6 +10,7 @@ import VerifyPayments from "./pages/VerifyPayments";
 import Reports from "./pages/Reports";
 import Notifications from "./pages/Notifications";
 import ExamPermit from "./pages/ExamPermit";
+import PaymentHistory from "./pages/PaymentHistory";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import UserManagement from "./pages/UserManagement";
 import TeacherProctor from "./pages/TeacherProctor";
@@ -56,6 +57,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["student"]}>
                 <ExamPermit />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/history"
+            element={
+              <ProtectedRoute allowedRoles={["student"]}>
+                <PaymentHistory />
               </ProtectedRoute>
             }
           />

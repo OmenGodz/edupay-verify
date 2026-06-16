@@ -11,6 +11,7 @@ import {
   IconBarChart,
   IconLogOut,
   IconX,
+  IconInbox,
 } from "../icons/Icons";
 
 const iconMap = {
@@ -21,6 +22,7 @@ const iconMap = {
   check: IconCheckCircle,
   qr: IconQrCode,
   chart: IconBarChart,
+  inbox: IconInbox,
 };
 
 const roleLabels = {
