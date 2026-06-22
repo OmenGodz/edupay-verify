@@ -123,9 +123,36 @@ const deactivateUser = async (req, res) => {
   }
 };
 
+// Search for students by ID or name (for cashier direct payment validation)
+const searchStudents = async (req, res) => {
+  try {
+    const { query } = req.query;
+
+    if (!query || query.trim() === "") {
+      return res.status(400).json({ message: "Search query is required." });
+    }
+
+    const students = await User.find({
+      role: "student",
+      $or: [
+        { studentId: { $regex: query, $options: "i" } },
+        { name: { $regex: query, $options: "i" } },
+        { email: { $regex: query, $options: "i" } },
+      ],
+    })
+      .select("-password")
+      .limit(10);
+
+    res.json(students);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAllUsers,
   createUser,
   updateUser,
   deactivateUser,
+  searchStudents,
 };

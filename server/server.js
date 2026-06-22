@@ -12,6 +12,7 @@ const qrRoutes = require("./routes/qrRoutes");
 const eligibilityRoutes = require("./routes/eligibilityRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const userManagementRoutes = require("./routes/userManagementRoutes");
+const examRoutes = require("./routes/examRoutes");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/api/verify", verificationRoutes);
 app.use("/api/qr", qrRoutes);
 app.use("/api/eligibility", eligibilityRoutes);
 app.use("/api/users", userManagementRoutes);
+app.use("/api/exams", examRoutes);
 
 app.get("/", (req, res) => {
   res.send("EduPay Verify API Running");

@@ -14,10 +14,13 @@ export const cashierNav = [
 
 export const teacherNav = [
   { label: "Exam Proctor", path: "/teacher", icon: "qr" },
+  { label: "My Exams", path: "/my-exams", icon: "calendar" },
 ];
 
 export const superAdminNav = [
   { label: "Dashboard", path: "/super-admin", icon: "home" },
+  { label: "Exam Schedule", path: "/exam-schedule", icon: "calendar" },
+  { label: "Exam Report", path: "/exam-schedule-report", icon: "printer" },
   { label: "User Management", path: "/user-management", icon: "users" },
   { label: "Notifications", path: "/notifications", icon: "bell" },
   { label: "Reports", path: "/reports", icon: "chart" },

@@ -15,7 +15,7 @@ new mongoose.Schema(
 
     recipientRole: {
         type: String,
-        enum: ["student", "cashier"],
+        enum: ["student", "cashier", "teacher"],
         default: "student",
     },
 

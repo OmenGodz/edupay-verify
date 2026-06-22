@@ -17,7 +17,22 @@ export const approvePayment = async (id) => {
   return res.data;
 };
 
-export const rejectPayment = async (id) => {
-  const res = await API.put(`/payments/reject/${id}`);
+export const rejectPayment = async (id, remarks = "", rejectionReason = "other") => {
+  const res = await API.put(`/payments/reject/${id}`, {
+    remarks,
+    rejectionReason,
+  });
+  return res.data;
+};
+
+export const createDirectPayment = async (paymentData) => {
+  const res = await API.post("/payments/direct-payment", paymentData);
+  return res.data;
+};
+
+export const searchStudents = async (query) => {
+  const res = await API.get("/users/search", {
+    params: { query },
+  });
   return res.data;
 };

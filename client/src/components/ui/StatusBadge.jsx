@@ -3,6 +3,10 @@ const statusStyles = {
   Approved: "bg-blue-50 text-sti-blue border border-blue-100",
   Rejected: "bg-red-50 text-red-700",
   "Need Review": "bg-sti-gold/20 text-sti-blue",
+  Scheduled: "bg-blue-50 text-sti-blue border border-blue-100",
+  "In Progress": "bg-purple-50 text-purple-700 border border-purple-100",
+  Completed: "bg-green-50 text-green-700 border border-green-100",
+  Cancelled: "bg-gray-100 text-gray-700 border border-gray-200",
 };
 
 const StatusBadge = ({ status }) => (

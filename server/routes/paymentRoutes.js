@@ -6,6 +6,7 @@ const {
   getPayments,
   approvePayment,
   rejectPayment,
+  createDirectPayment,
 } = require(
   "../controllers/paymentController"
 );
@@ -39,6 +40,13 @@ router.get(
   "/",
   protect,
   getPayments
+);
+
+router.post(
+  "/direct-payment",
+  protect,
+  cashierOnly,
+  createDirectPayment
 );
 
 router.put(
