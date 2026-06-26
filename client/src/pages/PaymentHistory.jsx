@@ -64,11 +64,6 @@ const PaymentHistory = () => {
 
   return (
     <div className="mx-auto max-w-4xl">
-      <PageHeader
-        title="Payment History"
-        subtitle="View your past transactions and filter by exam term."
-      />
-
       {error && (
         <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {error}
@@ -83,7 +78,7 @@ const PaymentHistory = () => {
         <select
           value={selectedTerm}
           onChange={(e) => setSelectedTerm(e.target.value)}
-          className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-semibold text-gray-800 outline-none transition focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20"
+          className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-semibold text-gray-800 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
         >
           {EXAM_TERMS.map((term) => (
             <option key={term.value} value={term.value}>

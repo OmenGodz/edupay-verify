@@ -4,12 +4,12 @@ const cardBase =
 const StatCard = ({
   label,
   value,
-  valueClassName = "text-sti-blue",
+  valueClassName = "text-blue-700",
   variant = "centered",
   icon: Icon,
-  iconClassName = "bg-blue-50 text-sti-blue",
+  iconClassName = "bg-blue-50 text-blue-600",
   subLabel,
-  subLabelClassName = "text-sti-blue bg-blue-50",
+  subLabelClassName = "text-blue-600 bg-blue-50",
   loading = false,
 }) => {
   if (variant === "icon" && Icon) {

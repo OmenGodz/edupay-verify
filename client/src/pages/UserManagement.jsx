@@ -182,7 +182,7 @@ const UserManagement = () => {
         type="button"
         onClick={() => setDrawerOpen(false)}
         disabled={drawerLoading}
-        className="min-h-11 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-bold text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-sti-blue/20 disabled:opacity-60"
+        className="min-h-11 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-bold text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
       >
         Cancel
       </button>
@@ -190,7 +190,7 @@ const UserManagement = () => {
         type="button"
         onClick={handleSubmit}
         disabled={drawerLoading}
-        className="flex min-h-11 items-center gap-2 rounded-lg bg-sti-gold px-5 py-2.5 text-sm font-black text-sti-blue shadow-[0_8px_20px_rgba(255,199,44,0.25)] transition hover:-translate-y-0.5 hover:bg-sti-gold-hover focus:outline-none focus:ring-2 focus:ring-sti-blue/20 disabled:opacity-70"
+        className="flex min-h-11 items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-black text-white shadow-[0_4px_14px_rgba(37,99,235,0.39)] transition hover:-translate-y-0.5 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-70"
       >
         {drawerLoading ? <IconLoader className="h-4 w-4" /> : null}
         {drawerMode === "create" ? "Create User" : "Save Changes"}
@@ -200,20 +200,7 @@ const UserManagement = () => {
 
   return (
     <div>
-      <PageHeader
-        title="User Management"
-        subtitle="Create, edit, and manage all system users."
-        action={
-          <button
-            type="button"
-            onClick={openCreate}
-            className="flex min-h-11 items-center gap-2 rounded-lg bg-sti-gold px-5 py-2.5 text-sm font-black text-sti-blue shadow-[0_8px_20px_rgba(255,199,44,0.25)] transition hover:-translate-y-0.5 hover:bg-sti-gold-hover focus:outline-none focus:ring-2 focus:ring-sti-blue/20"
-          >
-            <IconUserPlus className="h-4 w-4" />
-            Add User
-          </button>
-        }
-      />
+    
 
       {error && (
         <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -222,7 +209,7 @@ const UserManagement = () => {
       )}
 
       {/* Search + filter bar */}
-      <div className="mb-6 flex flex-wrap items-center gap-3">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <div className="relative flex-1 sm:max-w-xs">
           <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
             <IconSearch className="h-4 w-4" />
@@ -232,10 +219,19 @@ const UserManagement = () => {
             placeholder="Search by name, email, or ID…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="min-h-11 w-full rounded-lg border border-gray-200 py-2.5 pl-9 pr-4 text-sm font-medium text-gray-700 shadow-sm outline-none transition focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20"
+            className="min-h-11 w-full rounded-lg border border-gray-200 py-2.5 pl-9 pr-4 text-sm font-medium text-gray-700 shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
             aria-label="Search users"
           />
         </div>
+
+        <button
+          type="button"
+          onClick={openCreate}
+          className="flex min-h-11 items-center gap-2 rounded-lg bg-sti-gold px-5 py-2.5 text-sm font-black text-sti-blue shadow-[0_8px_20px_rgba(255,199,44,0.25)] transition hover:-translate-y-0.5 hover:bg-sti-gold-hover focus:outline-none focus:ring-2 focus:ring-sti-blue/20"
+        >
+          <IconUserPlus className="h-4 w-4" />
+          Add User
+        </button>
       </div>
 
       {/* Filter tabs */}
@@ -246,9 +242,9 @@ const UserManagement = () => {
             type="button"
             onClick={() => setFilter(f)}
             className={[
-              "min-h-11 rounded-lg px-4 py-2.5 text-sm font-bold transition focus:outline-none focus:ring-2 focus:ring-sti-blue/20",
+              "min-h-11 rounded-lg px-4 py-2.5 text-sm font-bold transition focus:outline-none focus:ring-2 focus:ring-blue-500/20",
               filter === f
-                ? "bg-sti-blue text-white shadow-[0_4px_14px_rgba(0,61,165,0.35)]"
+                ? "bg-blue-600 text-white shadow-[0_4px_14px_rgba(37,99,235,0.39)]"
                 : "border border-gray-200 bg-white text-gray-600 hover:bg-gray-50",
             ].join(" ")}
           >
@@ -295,7 +291,7 @@ const UserManagement = () => {
                     className="group transition-colors hover:bg-blue-50/30"
                   >
                     <td className="whitespace-nowrap px-6 py-4">
-                      <p className="text-sm font-semibold text-gray-800 group-hover:text-sti-blue">
+                      <p className="text-sm font-semibold text-gray-800 group-hover:text-blue-600">
                         {user.name}
                       </p>
                     </td>
@@ -306,7 +302,7 @@ const UserManagement = () => {
                       {user.studentId || "—"}
                     </td>
                     <td className="whitespace-nowrap px-6 py-4">
-                      <span className="inline-flex rounded-md bg-blue-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-sti-blue shadow-sm">
+                      <span className="inline-flex rounded-md bg-blue-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-blue-700 shadow-sm">
                         {user.role}
                       </span>
                     </td>
@@ -326,7 +322,7 @@ const UserManagement = () => {
                         <button
                           type="button"
                           onClick={() => openEdit(user)}
-                          className="inline-flex min-h-11 items-center gap-1 rounded-md bg-blue-50 px-3 py-2.5 text-xs font-bold text-sti-blue transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-sti-blue/20"
+                          className="inline-flex min-h-11 items-center gap-1 rounded-md bg-blue-50 px-3 py-2.5 text-xs font-bold text-blue-700 transition hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                           aria-label={`Edit ${user.name}`}
                         >
                           <IconEdit className="h-3.5 w-3.5" />
@@ -389,7 +385,7 @@ const UserManagement = () => {
               value={form.studentId}
               onChange={(e) => updateField("studentId", e.target.value)}
               required
-              className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20"
+              className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
 
@@ -406,7 +402,7 @@ const UserManagement = () => {
               value={form.name}
               onChange={(e) => updateField("name", e.target.value)}
               required
-              className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20"
+              className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
 
@@ -423,7 +419,7 @@ const UserManagement = () => {
               value={form.email}
               onChange={(e) => updateField("email", e.target.value)}
               required
-              className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20"
+              className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
 
@@ -445,7 +441,7 @@ const UserManagement = () => {
               value={form.password}
               onChange={(e) => updateField("password", e.target.value)}
               required={drawerMode === "create"}
-              className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20"
+              className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
 
@@ -460,7 +456,7 @@ const UserManagement = () => {
               id="um-role"
               value={form.role}
               onChange={(e) => updateField("role", e.target.value)}
-              className="min-h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20"
+              className="min-h-11 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
             >
               {ROLES.map((r) => (
                 <option key={r} value={r}>
@@ -483,7 +479,7 @@ const UserManagement = () => {
                 type="text"
                 value={form.course}
                 onChange={(e) => updateField("course", e.target.value)}
-                className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20"
+                className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
             <div>
@@ -500,7 +496,7 @@ const UserManagement = () => {
                 max="6"
                 value={form.yearLevel}
                 onChange={(e) => updateField("yearLevel", e.target.value)}
-                className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20"
+                className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
           </div>
@@ -519,7 +515,7 @@ const UserManagement = () => {
                 value={form.semester}
                 onChange={(e) => updateField("semester", e.target.value)}
                 placeholder="e.g. 1st Semester"
-                className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20"
+                className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
             <div>
@@ -535,7 +531,7 @@ const UserManagement = () => {
                 value={form.schoolYear}
                 onChange={(e) => updateField("schoolYear", e.target.value)}
                 placeholder="e.g. 2025-2026"
-                className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20"
+                className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm shadow-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
           </div>

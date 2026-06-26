@@ -12,6 +12,9 @@ import {
   IconLogOut,
   IconX,
   IconInbox,
+  IconCalendar,
+  IconUsers,
+  IconFile,
 } from "../icons/Icons";
 
 const iconMap = {
@@ -23,6 +26,9 @@ const iconMap = {
   qr: IconQrCode,
   chart: IconBarChart,
   inbox: IconInbox,
+  calendar: IconCalendar,
+  users: IconUsers,
+  printer: IconFile, // using IconFile as a stand-in for printer
 };
 
 const roleLabels = {
@@ -89,9 +95,9 @@ const Sidebar = ({ open, onClose }) => {
               onClick={onClose}
               className={({ isActive }) =>
                 [
-                  "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-sti-blue/20",
+                  "flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/20",
                   isActive
-                    ? "bg-blue-50 text-sti-blue"
+                    ? "bg-blue-50 text-blue-700"
                     : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
                 ].join(" ")
               }

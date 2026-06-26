@@ -53,7 +53,7 @@ const getTypeStyle = (title) => {
   return {
     Icon: IconInfo,
     bg: "bg-blue-100",
-    text: "text-sti-blue",
+    text: "text-blue-600",
     symbol: "●",
   };
 };
@@ -153,7 +153,7 @@ const Header = ({ onMenuClick }) => {
         <button
           type="button"
           onClick={onMenuClick}
-          className="min-h-11 rounded-lg p-2.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-sti-blue focus:outline-none focus:ring-2 focus:ring-sti-blue/20 md:hidden"
+          className="min-h-11 rounded-lg p-2.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 md:hidden"
           aria-label="Open menu"
         >
           <IconMenu className="h-5 w-5" />
@@ -169,7 +169,7 @@ const Header = ({ onMenuClick }) => {
           <button
             type="button"
             onClick={() => setDropdownOpen((prev) => !prev)}
-            className="relative min-h-11 rounded-full p-2.5 text-gray-400 transition-colors hover:bg-blue-50 hover:text-sti-blue focus:outline-none focus:ring-2 focus:ring-sti-blue/20"
+            className="relative min-h-11 rounded-full p-2.5 text-gray-400 transition-colors hover:bg-blue-50 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             aria-label="Notifications"
           >
           <IconBell className="h-6 w-6" />
@@ -191,7 +191,7 @@ const Header = ({ onMenuClick }) => {
                 Notifications
               </p>
               {unreadCount > 0 && (
-                <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-sti-blue">
+                <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-bold text-blue-600">
                   {unreadCount} unread
                 </span>
               )}
@@ -253,7 +253,7 @@ const Header = ({ onMenuClick }) => {
                   setDropdownOpen(false);
                   navigate("/notifications");
                 }}
-                className="flex w-full items-center justify-center gap-1.5 px-4 py-3 text-xs font-bold text-sti-blue transition-colors hover:bg-blue-50 hover:text-sti-blue-light"
+                className="flex w-full items-center justify-center gap-1.5 px-4 py-3 text-xs font-bold text-blue-600 transition-colors hover:bg-blue-50 hover:text-blue-700"
               >
                 View all notifications
                 <IconArrowRight className="h-3.5 w-3.5" />

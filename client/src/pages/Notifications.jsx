@@ -122,11 +122,6 @@ const Notifications = () => {
   return (
     <div className="mx-auto max-w-4xl">
       <PageHeader
-        title={isCashier ? "Cashier Notifications" : "Your Notifications"}
-        subtitle={isCashier
-          ? "Stay updated on new student receipt submissions."
-          : "Stay updated on your payment verification status."
-        }
         action={
           unreadCount > 0 ? (
             <button

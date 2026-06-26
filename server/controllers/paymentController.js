@@ -333,11 +333,18 @@ async (req, res) => {
     }
 
     payment.status = "Rejected";
+    payment.remarks = req.body.remarks || "";
+    payment.rejectionReason = req.body.rejectionReason || "other";
+
+    const cashier = await User.findById(req.user.id);
+    const remarksText = req.body.remarks 
+      ? `${req.body.remarks}` 
+      : "Please upload a clearer receipt.";
 
     await Notification.create({
       studentId: payment.studentId,
       title: "Payment Rejected",
-      message: "Please upload a clearer receipt.",
+      message: remarksText,
     });
 
     await payment.save();
@@ -356,9 +363,126 @@ async (req, res) => {
 
 };
 
+const createDirectPayment =
+async (req, res) => {
+  try {
+    const cashier = await User.findById(req.user.id);
+
+    if (!cashier || cashier.role !== "cashier") {
+      return res.status(403).json({
+        message: "Only cashiers can create direct payments.",
+      });
+    }
+
+    const { studentId, amount, paymentDescription, examCoverage } = req.body;
+
+    if (!studentId || !amount) {
+      return res.status(400).json({
+        message: "studentId and amount are required.",
+      });
+    }
+
+    const student = await User.findOne({ studentId });
+
+    if (!student) {
+      return res.status(404).json({
+        message: "Student not found.",
+      });
+    }
+
+    const payment = await Payment.create({
+      studentId: studentId,
+      studentName: student.name,
+      amount: Number(amount),
+      paymentDescription: paymentDescription || "Direct Payment",
+      examCoverage: examCoverage || null,
+      status: "Approved",
+      paymentMethod: "direct",
+      receiptImage: null,
+      invoiceNumber: null,
+      approvedBy: cashier._id,
+      approvedAt: new Date(),
+    });
+
+    await Notification.create({
+      studentId: studentId,
+      title: "Direct Payment Recorded",
+      message: `A direct payment of ₱${amount} has been recorded by the cashier.`,
+    });
+
+    if (examCoverage) {
+      let ledger = await Ledger.findOne({ studentId: studentId });
+
+      if (!ledger) {
+        ledger = await Ledger.create({
+          studentId: studentId,
+        });
+      }
+
+      ledger.paidAmount += Number(amount) || 0;
+      ledger.remainingBalance = ledger.totalTuition - ledger.paidAmount;
+
+      if (ledger.remainingBalance <= 0) {
+        ledger.fullyPaid = true;
+        ledger.prelim = true;
+        ledger.midterm = true;
+        ledger.preFinal = true;
+        ledger.final = true;
+      }
+
+      const coverageMap = {
+        Prelim: "prelim",
+        Midterm: "midterm",
+        PreFinal: "preFinal",
+        Final: "final",
+      };
+
+      const ledgerField = coverageMap[examCoverage];
+      if (ledgerField) {
+        ledger[ledgerField] = true;
+      }
+
+      const crypto = require("crypto");
+      await ExamPermit.findOneAndUpdate(
+        {
+          studentId: studentId,
+          examType: examCoverage,
+        },
+        {
+          $set: {
+            studentName: student.name,
+            paymentId: payment._id,
+            permitStatus: "Valid",
+          },
+          $setOnInsert: {
+            qrToken: crypto.randomBytes(24).toString("hex"),
+            proctorDecision: "Pending",
+          },
+        },
+        {
+          upsert: true,
+          new: true,
+        }
+      );
+
+      await ledger.save();
+    }
+
+    res.status(201).json({
+      message: "Direct payment created successfully.",
+      payment,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
 module.exports = {
   createPayment,
   getPayments,
   approvePayment,
   rejectPayment,
+  createDirectPayment,
 };

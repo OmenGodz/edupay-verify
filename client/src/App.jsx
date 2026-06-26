@@ -14,6 +14,9 @@ import PaymentHistory from "./pages/PaymentHistory";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import UserManagement from "./pages/UserManagement";
 import TeacherProctor from "./pages/TeacherProctor";
+import ExamSchedule from "./pages/ExamSchedule";
+import AssignedExams from "./pages/AssignedExams";
+import ExamScheduleReport from "./pages/ExamScheduleReport";
 
 function App() {
   return (
@@ -85,6 +88,14 @@ function App() {
             }
           />
           <Route
+            path="/my-exams"
+            element={
+              <ProtectedRoute allowedRoles={["teacher"]}>
+                <AssignedExams />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/verify-payments"
             element={
               <ProtectedRoute allowedRoles={["cashier"]}>
@@ -113,6 +124,22 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["super_admin"]}>
                 <UserManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/exam-schedule"
+            element={
+              <ProtectedRoute allowedRoles={["super_admin"]}>
+                <ExamSchedule />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/exam-schedule-report"
+            element={
+              <ProtectedRoute allowedRoles={["super_admin"]}>
+                <ExamScheduleReport />
               </ProtectedRoute>
             }
           />

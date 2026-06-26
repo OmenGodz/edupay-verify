@@ -146,11 +146,12 @@ const Login = () => {
   return (
     <div className="relative flex min-h-svh items-center justify-center overflow-hidden p-4 sm:p-8">
       <div
-        className="absolute inset-0 bg-gradient-to-br from-sti-blue via-sti-blue-light to-sti-blue"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/login-bg.jpg')" }}
         aria-hidden="true"
       />
       <div
-        className="absolute inset-0 bg-white/10 backdrop-blur-[2px]"
+        className="absolute inset-0 bg-blue-900/40 backdrop-blur-sm"
         aria-hidden="true"
       />
       <div
@@ -164,13 +165,13 @@ const Login = () => {
 
       <div className="relative flex w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] md:min-h-[600px] md:flex-row">
         {/* ── Left panel ── */}
-        <div className="slide-in-left relative flex w-full flex-col justify-between overflow-hidden bg-gradient-to-br from-sti-blue to-sti-blue-light p-8 text-white sm:p-12 md:w-1/2 md:p-12">
+        <div className="slide-in-left relative flex w-full flex-col justify-between overflow-hidden bg-gradient-to-br from-blue-700 to-blue-600 p-8 text-white sm:p-12 md:w-1/2 md:p-12">
           <div
             className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-white/5"
             aria-hidden="true"
           />
           <div
-            className="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-sti-gold/10"
+            className="pointer-events-none absolute -bottom-20 -left-10 h-56 w-56 rounded-full bg-blue-400/20"
             aria-hidden="true"
           />
 
@@ -196,15 +197,15 @@ const Login = () => {
             </p>
             <ul className="mt-6 space-y-3 text-sm text-blue-100">
               <li className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-sti-gold" />
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue-300" />
                 Submit payment receipts digitally
               </li>
               <li className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-sti-gold" />
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue-300" />
                 Cashier verification with OCR
               </li>
               <li className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-sti-gold" />
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue-300" />
                 Exam permit eligibility tracking
               </li>
             </ul>
@@ -258,7 +259,7 @@ const Login = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       disabled={loading}
-                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20 disabled:opacity-60"
+                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
                     />
                   </div>
                 </div>
@@ -282,7 +283,7 @@ const Login = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       disabled={loading}
-                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-11 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20 disabled:opacity-60"
+                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-11 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
                     />
                     <button
                       type="button"
@@ -302,7 +303,7 @@ const Login = () => {
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
                     disabled={loading}
-                    className="h-4 w-4 cursor-pointer rounded border-gray-300 text-sti-blue focus:ring-sti-blue"
+                    className="h-4 w-4 cursor-pointer rounded border-gray-300 text-blue-600 focus:ring-blue-600"
                   />
                   <label
                     htmlFor="remember"
@@ -315,7 +316,7 @@ const Login = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-sti-gold py-3.5 text-sm font-black text-sti-blue shadow-[0_8px_20px_rgba(255,199,44,0.25)] transition hover:-translate-y-0.5 hover:bg-sti-gold-hover focus:outline-none focus:ring-2 focus:ring-sti-blue/20 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+                  className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3.5 text-sm font-black text-white shadow-[0_4px_14px_rgba(37,99,235,0.39)] transition hover:-translate-y-0.5 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
                 >
                   {loading ? (
                     <>
@@ -333,7 +334,7 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => switchMode("signup")}
-                  className="font-bold text-sti-blue transition hover:text-sti-blue-light"
+                  className="font-bold text-blue-600 transition hover:text-blue-700"
                 >
                   Create Account
                 </button>
@@ -387,7 +388,7 @@ const Login = () => {
                       value={studentId}
                       onChange={(e) => setStudentId(e.target.value)}
                       disabled={loading}
-                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20 disabled:opacity-60"
+                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
                     />
                   </div>
                 </div>
@@ -412,7 +413,7 @@ const Login = () => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       disabled={loading}
-                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20 disabled:opacity-60"
+                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
                     />
                   </div>
                 </div>
@@ -437,7 +438,7 @@ const Login = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       disabled={loading}
-                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20 disabled:opacity-60"
+                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
                     />
                   </div>
                 </div>
@@ -463,7 +464,7 @@ const Login = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         disabled={loading}
-                        className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-11 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20 disabled:opacity-60"
+                        className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-11 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
                       />
                       <button
                         type="button"
@@ -494,7 +495,7 @@ const Login = () => {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         disabled={loading}
-                        className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20 disabled:opacity-60"
+                        className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
                       />
                     </div>
                   </div>
@@ -520,7 +521,7 @@ const Login = () => {
                         value={course}
                         onChange={(e) => setCourse(e.target.value)}
                         disabled={loading}
-                        className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20 disabled:opacity-60"
+                        className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
                       />
                     </div>
                   </div>
@@ -536,7 +537,7 @@ const Login = () => {
                       value={yearLevel}
                       onChange={(e) => setYearLevel(e.target.value)}
                       disabled={loading}
-                      className="block w-full appearance-none rounded-xl border border-gray-200 bg-white py-3 pl-4 pr-8 text-sm font-medium text-gray-900 shadow-sm outline-none transition focus:border-sti-blue focus:ring-2 focus:ring-sti-blue/20 disabled:opacity-60"
+                      className="block w-full appearance-none rounded-xl border border-gray-200 bg-white py-3 pl-4 pr-8 text-sm font-medium text-gray-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
                     >
                       <option value="">Select year</option>
                       {YEAR_LEVELS.map((y) => (
@@ -551,7 +552,7 @@ const Login = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-sti-gold py-3.5 text-sm font-black text-sti-blue shadow-[0_8px_20px_rgba(255,199,44,0.25)] transition hover:-translate-y-0.5 hover:bg-sti-gold-hover focus:outline-none focus:ring-2 focus:ring-sti-blue/20 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+                  className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3.5 text-sm font-black text-white shadow-[0_4px_14px_rgba(37,99,235,0.39)] transition hover:-translate-y-0.5 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
                 >
                   {loading ? (
                     <>
@@ -569,7 +570,7 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => switchMode("login")}
-                  className="font-bold text-sti-blue transition hover:text-sti-blue-light"
+                  className="font-bold text-blue-600 transition hover:text-blue-700"
                 >
                   Sign In
                 </button>

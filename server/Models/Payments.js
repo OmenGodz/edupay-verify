@@ -33,8 +33,42 @@ const paymentSchema = new mongoose.Schema(
         "Approved",
         "Rejected",
         "Need Review",
+        "Direct Payment",
       ],
       default: "Pending",
+    },
+
+    remarks: {
+      type: String,
+      required: false,
+    },
+
+    rejectionReason: {
+      type: String,
+      enum: [
+        "blurry",
+        "incomplete",
+        "invalid",
+        "duplicate",
+        "other",
+      ],
+      required: false,
+    },
+
+    paymentMethod: {
+      type: String,
+      enum: ["receipt", "direct"],
+      default: "receipt",
+    },
+
+    approvedBy: {
+      type: String,
+      required: false,
+    },
+
+    approvedAt: {
+      type: Date,
+      required: false,
     },
   },
   {

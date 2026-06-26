@@ -9,6 +9,10 @@ const pageTitles = {
   "/teacher": "Exam Proctor",
   "/super-admin": "Super Admin Dashboard",
   "/user-management": "User Management",
+  "/history": "Payment History",
+  "/my-exams": "My Exams",
+  "/exam-schedule": "Exam Schedule",
+  "/exam-schedule-report": "Exam Report",
 };
 
 export const getPageTitle = (pathname) =>

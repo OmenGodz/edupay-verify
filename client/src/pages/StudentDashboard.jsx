@@ -78,10 +78,6 @@ const StudentDashboard = () => {
 
   return (
     <div>
-      <PageHeader
-        title={`Welcome, ${displayName}`}
-        subtitle="Manage your payments and exam permits."
-      />
 
       {error && (
         <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -93,25 +89,25 @@ const StudentDashboard = () => {
         <StatCard
           label="Total Submissions"
           value={stats.total}
-          valueClassName="text-sti-blue"
+          valueClassName="text-blue-700"
           loading={loading}
         />
         <StatCard
           label="Pending"
           value={stats.pending}
-          valueClassName="text-sti-gold"
+          valueClassName="text-amber-600"
           loading={loading}
         />
         <StatCard
           label="Approved"
           value={stats.approved}
-          valueClassName="text-sti-blue"
+          valueClassName="text-green-600"
           loading={loading}
         />
         <StatCard
           label="Need Action"
           value={stats.needAction}
-          valueClassName="text-sti-blue-light"
+          valueClassName="text-red-500"
           loading={loading}
         />
       </div>
@@ -143,7 +139,7 @@ const StudentDashboard = () => {
           <button
             type="button"
             onClick={() => navigate("/history")}
-            className="text-xs font-bold text-sti-blue transition hover:text-sti-blue-light focus:outline-none focus:ring-2 focus:ring-sti-blue/20 rounded px-1"
+            className="text-xs font-bold text-blue-600 transition hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 rounded px-1"
             aria-label="View all history"
           >
             View all history →

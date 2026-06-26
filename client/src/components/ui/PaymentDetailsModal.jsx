@@ -55,10 +55,11 @@ const PaymentDetailsModal = ({ isOpen, onClose, payment }) => {
           </div>
         </div>
 
-        <div className="mt-6">
+        {/* Footer with template-style buttons */}
+        <div className="pt-2 flex justify-end">
           <button
             onClick={onClose}
-            className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2.5 rounded-lg transition"
+            className="bg-white border border-gray-300 rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors px-4 py-2"
           >
             Close
           </button>

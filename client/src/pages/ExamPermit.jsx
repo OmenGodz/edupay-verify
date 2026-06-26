@@ -81,11 +81,6 @@ const ExamPermit = () => {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <PageHeader
-        title="Exam Permit"
-        subtitle="View your exam eligibility and generate digital permits."
-      />
-
       {error && (
         <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {error}
@@ -180,7 +175,7 @@ const ExamPermit = () => {
                 >
                   <div className="flex items-center gap-3">
                     {valid ? (
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-sti-blue/10 text-sti-blue">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
                         <IconShield className="h-5 w-5" />
                       </div>
                     ) : (
@@ -193,7 +188,7 @@ const ExamPermit = () => {
                         {label}
                       </p>
                       <p
-                        className={`text-xs font-semibold ${valid ? "text-sti-blue" : "text-gray-400"}`}
+                        className={`text-xs font-semibold ${valid ? "text-blue-600" : "text-gray-400"}`}
                       >
                         {valid ? "Permit Ready" : "Not Eligible"}
                       </p>
@@ -215,7 +210,7 @@ const ExamPermit = () => {
                     className={[
                       "inline-flex rounded-md px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider shadow-sm transition-colors",
                       valid
-                        ? "cursor-pointer hover:bg-sti-blue hover:text-white bg-sti-blue/10 text-sti-blue"
+                        ? "cursor-pointer hover:bg-blue-600 hover:text-white bg-blue-50 text-blue-700"
                         : "bg-gray-100 text-gray-400",
                     ].join(" ")}
                   >
@@ -254,11 +249,11 @@ const ExamPermit = () => {
                   disabled={!valid || loading}
                   onClick={() => handleGenerateQR(key)}
                   className={[
-                    "flex min-h-11 items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold transition focus:outline-none focus:ring-2 focus:ring-sti-blue/20",
+                    "flex min-h-11 items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold transition focus:outline-none focus:ring-2 focus:ring-blue-500/20",
                     valid
                       ? selectedExam === key
-                        ? "bg-sti-blue text-white shadow-[0_4px_14px_rgba(0,61,165,0.35)]"
-                        : "border border-sti-blue/20 bg-sti-blue/5 text-sti-blue hover:bg-sti-blue/10"
+                        ? "bg-blue-600 text-white shadow-[0_4px_14px_rgba(37,99,235,0.39)]"
+                        : "border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
                       : "cursor-not-allowed border border-gray-100 bg-gray-50 text-gray-300",
                   ].join(" ")}
                   aria-label={`Generate ${label} exam permit QR code`}
@@ -276,7 +271,7 @@ const ExamPermit = () => {
             <div className="flex flex-col items-center rounded-xl border border-gray-100 bg-gray-50/50 p-8">
               {qrLoading ? (
                 <div className="flex flex-col items-center gap-3">
-                  <IconLoader className="h-8 w-8 text-sti-blue" />
+                  <IconLoader className="h-8 w-8 text-blue-600" />
                   <p className="text-sm font-medium text-gray-500">
                     Generating QR code…
                   </p>
@@ -343,7 +338,7 @@ const ExamPermit = () => {
                 </>
               ) : (
                  <>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-sti-blue mb-3 shadow-sm">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-blue-600 mb-3 shadow-sm">
                     <IconQrCode className="h-6 w-6" />
                   </div>
                   <h4 className="font-bold text-gray-800 text-lg">Permit Ready</h4>
@@ -387,7 +382,7 @@ const ExamPermit = () => {
             <div className="mt-6">
               <button 
                 onClick={() => setSelectedPermitForModal(null)}
-                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2.5 rounded-lg transition"
+                className="w-full bg-white border border-gray-300 rounded-lg text-sm font-bold text-gray-700 hover:bg-gray-50 transition-colors py-2.5"
               >
                 Close
               </button>

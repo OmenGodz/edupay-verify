@@ -90,10 +90,6 @@ const UploadReceipt = () => {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <PageHeader
-        title="Submit Payment Receipt"
-        subtitle="Upload your receipt — details will be extracted automatically via OCR."
-      />
 
       <form
         onSubmit={submitReceipt}

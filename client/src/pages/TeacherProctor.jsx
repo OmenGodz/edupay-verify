@@ -134,12 +134,7 @@ const TeacherProctor = () => {
   };
 
   return (
-    <div className="mx-auto max-w-4xl">
-      <PageHeader
-        title="Exam Proctor"
-        subtitle="Scan student permit QR codes and record exam admission decisions."
-      />
-
+    <div className="mx-auto max-w-4xl">     
       {error && (
         <div className="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {error}

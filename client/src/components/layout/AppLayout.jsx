@@ -10,7 +10,7 @@ const AppLayout = () => {
   const openSidebar = () => setSidebarOpen(true);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#f5f7fb] font-sans antialiased text-gray-900">
+    <div className="flex h-screen overflow-hidden bg-[#f4f7f6] font-sans antialiased text-gray-900">
       {sidebarOpen && (
         <button
           type="button"
