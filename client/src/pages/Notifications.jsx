@@ -1,11 +1,8 @@
 import { useEffect, useState, useMemo } from "react";
-import { useAuth } from "../hooks/useAuth";
 import { useToast } from "../context/ToastContext";
 import {
-  getNotifications,
-  markAllRead,
-  getCashierNotifications,
-  cashierMarkAllRead,
+  getMyNotifications,
+  markMyNotificationsRead,
 } from "../api/notificationApi";
 import PageHeader from "../components/ui/PageHeader";
 import EmptyState from "../components/ui/EmptyState";
@@ -61,10 +58,7 @@ const getNotificationIcon = (title) => {
 };
 
 const Notifications = () => {
-  const { user, role } = useAuth();
   const { showToast } = useToast();
-  const studentId = user?.studentId;
-  const isCashier = role === "cashier";
 
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -72,16 +66,9 @@ const Notifications = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!isCashier && !studentId) {
-      setLoading(false);
-      return;
-    }
-
     const fetch = async () => {
       try {
-        const data = isCashier
-          ? await getCashierNotifications()
-          : await getNotifications(studentId);
+        const data = await getMyNotifications();
         setNotifications(data);
         setError("");
       } catch {
@@ -92,7 +79,7 @@ const Notifications = () => {
     };
 
     fetch();
-  }, [studentId, isCashier]);
+  }, []);
 
   const unreadCount = useMemo(
     () => notifications.filter((n) => !n.read).length,
@@ -100,14 +87,9 @@ const Notifications = () => {
   );
 
   const handleMarkAllRead = async () => {
-    if (!isCashier && !studentId) return;
     setMarking(true);
     try {
-      if (isCashier) {
-        await cashierMarkAllRead();
-      } else {
-        await markAllRead(studentId);
-      }
+      await markMyNotificationsRead();
       setNotifications((prev) =>
         prev.map((n) => ({ ...n, read: true }))
       );

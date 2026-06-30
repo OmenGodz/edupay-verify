@@ -1,39 +1,15 @@
-const express =
-require("express");
-
+const express = require("express");
+const protect = require("../middleware/protect");
 const {
-    getNotifications,
-    getCashierNotifications,
-    markAllRead,
-    cashierMarkAllRead,
-} = require(
-    "../controllers/notificationController"
-);
+    getMyNotifications,
+    markMyNotificationsRead,
+} = require("../controllers/notificationController");
 
-const router =
-express.Router();
+const router = express.Router();
 
-// Cashier routes (must be before /:studentId to avoid conflicts)
-router.get(
-    "/cashier",
-    getCashierNotifications
-);
+router.use(protect);
 
-router.patch(
-    "/cashier/read",
-    cashierMarkAllRead
-);
+router.get("/", getMyNotifications);
+router.patch("/read", markMyNotificationsRead);
 
-// Student routes
-router.get(
-    "/:studentId",
-    getNotifications
-);
-
-router.patch(
-    "/:studentId/read",
-    markAllRead
-);
-
-module.exports =
-router;
+module.exports = router;

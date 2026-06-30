@@ -1,21 +1,11 @@
 import API from "./client";
 
-export const getNotifications = async (studentId) => {
-  const res = await API.get(`/notifications/${studentId}`);
+export const getMyNotifications = async () => {
+  const res = await API.get("/notifications");
   return res.data;
 };
 
-export const markAllRead = async (studentId) => {
-  const res = await API.patch(`/notifications/${studentId}/read`);
-  return res.data;
-};
-
-export const getCashierNotifications = async () => {
-  const res = await API.get("/notifications/cashier");
-  return res.data;
-};
-
-export const cashierMarkAllRead = async () => {
-  const res = await API.patch("/notifications/cashier/read");
+export const markMyNotificationsRead = async () => {
+  const res = await API.patch("/notifications/read");
   return res.data;
 };

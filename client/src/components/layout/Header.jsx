@@ -7,7 +7,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { getPageTitle } from "../../config/pageTitles";
 import { useAuth } from "../../hooks/useAuth";
-import { getNotifications, getCashierNotifications } from "../../api/notificationApi";
+import { getMyNotifications } from "../../api/notificationApi";
 import { useToast } from "../../context/ToastContext";
 import {
   IconMenu,
@@ -68,8 +68,9 @@ const Header = ({ onMenuClick }) => {
   const studentId = user?.studentId;
   const isStudent = role === "student";
   const isCashier = role === "cashier";
-  const isSuperAdmin = role === "super_admin";
-  const showBell = isStudent || isCashier || isSuperAdmin;
+  const isTeacher = role === "teacher";
+  // Restore super_admin to show the bell icon, even if they currently receive no notifications
+  const showBell = ["student", "cashier", "teacher", "super_admin"].includes(role);
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
@@ -82,9 +83,7 @@ const Header = ({ onMenuClick }) => {
     async (silent = false) => {
       if (!showBell) return;
       try {
-        const data = isStudent
-          ? await getNotifications(studentId)
-          : await getCashierNotifications();
+        const data = await getMyNotifications();
         const unread = data.filter((n) => !n.read).length;
 
         /* Show toast for new ones if polling (not first load) */
@@ -115,7 +114,7 @@ const Header = ({ onMenuClick }) => {
         /* silent fail for polling */
       }
     },
-    [isStudent, showBell, studentId, showToast]
+    [showBell, showToast]
   );
 
   /* Initial load */

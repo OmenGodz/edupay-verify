@@ -1,68 +1,45 @@
-const Notification =
-require("../Models/Notification");
+const Notification = require("../Models/Notification");
+const User = require("../Models/User");
 
-const getNotifications =
-async (req, res) => {
-
+const getMyNotifications = async (req, res) => {
     try {
+        const role = req.user.role;
+        let filter = null;
 
-        const notifications =
-        await Notification.find({
-            studentId:
-            req.params.studentId,
-            recipientRole: "student",
-        }).sort({ createdAt: -1 });
+        if (role === "student" || role === "teacher") {
+            const user = await User.findById(req.user.id);
+            if (!user) return res.status(404).json({ message: "User not found" });
+            filter = { studentId: user.studentId, recipientRole: role };
+        } else if (role === "cashier") {
+            filter = { recipientRole: "cashier" };
+        } else {
+            return res.json([]);
+        }
 
-        res.json(
-            notifications
-        );
-
-    } catch (error) {
-
-        res.status(500).json({
-            message:
-            error.message,
-        });
-
-    }
-};
-
-const getCashierNotifications =
-async (req, res) => {
-    try {
-        const notifications =
-        await Notification.find({
-            recipientRole: "cashier",
-        }).sort({ createdAt: -1 });
-
+        const notifications = await Notification.find(filter).sort({ createdAt: -1 });
         res.json(notifications);
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
-};
-
-const markAllRead =
-async (req, res) => {
-    try {
-        await Notification.updateMany(
-            { studentId: req.params.studentId, recipientRole: "student", read: false },
-            { read: true }
-        );
-        res.json({ message: "All marked as read" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-const cashierMarkAllRead =
-async (req, res) => {
+const markMyNotificationsRead = async (req, res) => {
     try {
-        await Notification.updateMany(
-            { recipientRole: "cashier", read: false },
-            { read: true }
-        );
+        const role = req.user.role;
+        let filter = { read: false };
+
+        if (role === "student" || role === "teacher") {
+            const user = await User.findById(req.user.id);
+            if (!user) return res.status(404).json({ message: "User not found" });
+            filter.studentId = user.studentId;
+            filter.recipientRole = role;
+        } else if (role === "cashier") {
+            filter.recipientRole = "cashier";
+        } else {
+            return res.json({ message: "No notifications to mark" });
+        }
+
+        await Notification.updateMany(filter, { read: true });
         res.json({ message: "All marked as read" });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -70,8 +47,6 @@ async (req, res) => {
 };
 
 module.exports = {
-    getNotifications,
-    getCashierNotifications,
-    markAllRead,
-    cashierMarkAllRead,
+    getMyNotifications,
+    markMyNotificationsRead,
 };

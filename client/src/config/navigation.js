@@ -16,6 +16,7 @@ export const cashierNav = [
 export const teacherNav = [
   { label: "Exam Proctor", path: "/teacher", icon: "qr" },
   { label: "My Exams", path: "/my-exams", icon: "calendar" },
+  { label: "Notifications", path: "/notifications", icon: "bell" },
 ];
 
 export const superAdminNav = [
