@@ -38,6 +38,7 @@ const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Force role to "student" — other roles are created by super_admin only
+    // Student accounts start as "pending" and require admin verification
     const user = await User.create({
       studentId,
       name,
@@ -48,28 +49,20 @@ const register = async (req, res) => {
       yearLevel,
       semester,
       schoolYear,
+      verificationStatus: "pending",
     });
 
-    const token = jwt.sign(
-      {
-        id: user._id,
-        role: user.role,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "7d",
-      }
-    );
-
+    // Do NOT issue a JWT — account must be verified by admin first
     res.status(201).json({
-      token,
-      role: user.role,
+      message:
+        "Registration successful! Your account is pending admin verification. You will be notified once approved.",
       user: {
         id: user._id,
         studentId: user.studentId,
         name: user.name,
         email: user.email,
         role: user.role,
+        verificationStatus: user.verificationStatus,
       },
     });
   } catch (error) {
@@ -110,6 +103,26 @@ const login = async (req, res) => {
       });
     }
 
+    // Verification gate — applies to student role only
+    if (user.role === "student") {
+      if (user.verificationStatus === "pending") {
+        return res.status(403).json({
+          message: "Your account is awaiting admin verification.",
+          verificationStatus: "pending",
+        });
+      }
+
+      if (user.verificationStatus === "rejected") {
+        const reason = user.rejectionReason
+          ? ` Reason: ${user.rejectionReason}`
+          : "";
+        return res.status(403).json({
+          message: `Your account registration was rejected by the admin.${reason}`,
+          verificationStatus: "rejected",
+        });
+      }
+    }
+
     const token = jwt.sign(
       {
         id: user._id,
@@ -124,7 +137,13 @@ const login = async (req, res) => {
     res.status(200).json({
       token,
       role: user.role,
-      user,
+      user: {
+        id: user._id,
+        studentId: user.studentId,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
     });
   } catch (error) {
     res.status(500).json({

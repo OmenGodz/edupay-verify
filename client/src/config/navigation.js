@@ -23,6 +23,7 @@ export const superAdminNav = [
   { label: "Exam Schedule", path: "/exam-schedule", icon: "calendar" },
   { label: "Exam Report", path: "/exam-schedule-report", icon: "printer" },
   { label: "User Management", path: "/user-management", icon: "users" },
+  { label: "Pending Students", path: "/pending-students", icon: "users" },
   { label: "Notifications", path: "/notifications", icon: "bell" },
   { label: "Reports", path: "/reports", icon: "chart" },
 ];

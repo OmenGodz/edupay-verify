@@ -14,18 +14,4 @@ router.get("/test", (req, res) => {
 router.post("/register", register);
 router.post("/login", login);
 
-router.get("/create-user", async (req, res) => {
-  const User = require("../Models/User");
-
-  const user = await User.create({
-    studentId: "2022-0001",
-    name: "James",
-    email: "james@gmail.com",
-    password: "123456",
-    role: "student",
-  });
-
-  res.json(user);
-});
-
 module.exports = router;

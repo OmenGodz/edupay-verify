@@ -5,6 +5,21 @@ export const getAllUsers = async () => {
   return res.data;
 };
 
+export const getPendingStudents = async () => {
+  const res = await API.get("/users/pending-students");
+  return res.data;
+};
+
+export const verifyStudent = async (id) => {
+  const res = await API.patch(`/users/${id}/verify`);
+  return res.data;
+};
+
+export const rejectStudent = async (id, rejectionReason) => {
+  const res = await API.patch(`/users/${id}/reject`, { rejectionReason });
+  return res.data;
+};
+
 export const createUser = async (data) => {
   const res = await API.post("/users", data);
   return res.data;

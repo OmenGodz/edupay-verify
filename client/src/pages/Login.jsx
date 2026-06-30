@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import API from "../api/authApi";
 import {
   IconMail,
@@ -26,10 +27,13 @@ const YEAR_LEVELS = [
 const Login = () => {
   const [mode, setMode] = useState("login"); // "login" | "signup"
 
+  const navigate = useNavigate();
+
   // Shared fields
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -56,6 +60,15 @@ const Login = () => {
     setMode(newMode);
     setError("");
     setSuccess("");
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+    setStudentId("");
+    setName("");
+    setCourse("");
+    setYearLevel("");
+    setShowPassword(false);
+    setShowConfirmPassword(false);
   };
 
   const handleLogin = async (e) => {
@@ -64,6 +77,11 @@ const Login = () => {
 
     if (!email.trim() || !password) {
       setError("Please enter your email and password.");
+      return;
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      setError("Please enter a valid email address.");
       return;
     }
 
@@ -87,7 +105,7 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(res.data.user));
       }
 
-      window.location.href = getDefaultRoute(res.data.role);
+      navigate(getDefaultRoute(res.data.role));
     } catch (err) {
       setError(err.response?.data?.message || "Login failed. Please try again.");
     } finally {
@@ -101,6 +119,11 @@ const Login = () => {
 
     if (!studentId.trim() || !name.trim() || !email.trim() || !password) {
       setError("All fields marked with * are required.");
+      return;
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
+      setError("Please enter a valid email address.");
       return;
     }
 
@@ -126,14 +149,20 @@ const Login = () => {
         yearLevel: yearLevel ? Number(yearLevel) : undefined,
       });
 
-      // Auto-login after successful registration
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("role", res.data.role);
-      if (res.data.user) {
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-      }
-
-      window.location.href = getDefaultRoute(res.data.role);
+      // Registration no longer auto-logs in — show pending message
+      setSuccess(
+        res.data.message ||
+          "Registration successful! Your account is pending admin verification."
+      );
+      // Reset signup fields and switch to login after short delay
+      setPassword("");
+      setConfirmPassword("");
+      setTimeout(() => {
+        switchMode("login");
+        setSuccess(
+          "Your account has been created and is pending admin verification. You will be notified once approved."
+        );
+      }, 3000);
     } catch (err) {
       setError(
         err.response?.data?.message || "Registration failed. Please try again."
@@ -197,22 +226,22 @@ const Login = () => {
             </p>
             <ul className="mt-6 space-y-3 text-sm text-blue-100">
               <li className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue-300" />
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-sti-gold" />
                 Submit payment receipts digitally
               </li>
               <li className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue-300" />
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-sti-gold" />
                 Cashier verification with OCR
               </li>
               <li className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-blue-300" />
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-sti-gold" />
                 Exam permit eligibility tracking
               </li>
             </ul>
           </div>
 
           <p className="relative z-10 mt-8 text-xs text-blue-200/80">
-            STI College · Secure institutional access only
+            STI College - Secure institutional access only
           </p>
         </div>
 
@@ -228,6 +257,13 @@ const Login = () => {
                   Sign in with your institutional email to continue.
                 </p>
               </div>
+
+              {success && (
+                <div className="mb-4 flex items-start gap-2 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                  <IconCheckCircle className="mt-0.5 h-4 w-4 shrink-0" />
+                  <span>{success}</span>
+                </div>
+              )}
 
               <form onSubmit={handleLogin} className="space-y-5" noValidate>
                 {error && (
@@ -259,7 +295,7 @@ const Login = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       disabled={loading}
-                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
+                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-sti-gold focus:ring-2 focus:ring-sti-gold/20 disabled:opacity-60"
                     />
                   </div>
                 </div>
@@ -283,7 +319,7 @@ const Login = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       disabled={loading}
-                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-11 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
+                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-11 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-sti-gold focus:ring-2 focus:ring-sti-gold/20 disabled:opacity-60"
                     />
                     <button
                       type="button"
@@ -303,7 +339,7 @@ const Login = () => {
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
                     disabled={loading}
-                    className="h-4 w-4 cursor-pointer rounded border-gray-300 text-blue-600 focus:ring-blue-600"
+                    className="h-4 w-4 cursor-pointer rounded border-gray-300 text-sti-gold focus:ring-sti-gold"
                   />
                   <label
                     htmlFor="remember"
@@ -316,12 +352,12 @@ const Login = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3.5 text-sm font-black text-white shadow-[0_4px_14px_rgba(37,99,235,0.39)] transition hover:-translate-y-0.5 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+                  className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-sti-gold py-3.5 text-sm font-black text-sti-blue shadow-lg shadow-sti-gold/40 transition hover:-translate-y-0.5 hover:bg-sti-gold-hover focus:outline-none focus:ring-2 focus:ring-sti-gold/50 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
                 >
                   {loading ? (
                     <>
                       <IconLoader className="h-4 w-4" />
-                      Signing in…
+                      Signing in...
                     </>
                   ) : (
                     "Sign In"
@@ -334,7 +370,7 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => switchMode("signup")}
-                  className="font-bold text-blue-600 transition hover:text-blue-700"
+                  className="font-bold text-sti-blue transition hover:text-sti-blue-light"
                 >
                   Create Account
                 </button>
@@ -388,7 +424,7 @@ const Login = () => {
                       value={studentId}
                       onChange={(e) => setStudentId(e.target.value)}
                       disabled={loading}
-                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
+                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-sti-gold focus:ring-2 focus:ring-sti-gold/20 disabled:opacity-60"
                     />
                   </div>
                 </div>
@@ -413,7 +449,7 @@ const Login = () => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       disabled={loading}
-                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
+                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-sti-gold focus:ring-2 focus:ring-sti-gold/20 disabled:opacity-60"
                     />
                   </div>
                 </div>
@@ -438,7 +474,7 @@ const Login = () => {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       disabled={loading}
-                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
+                      className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-sti-gold focus:ring-2 focus:ring-sti-gold/20 disabled:opacity-60"
                     />
                   </div>
                 </div>
@@ -464,7 +500,7 @@ const Login = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         disabled={loading}
-                        className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-11 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
+                        className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-11 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-sti-gold focus:ring-2 focus:ring-sti-gold/20 disabled:opacity-60"
                       />
                       <button
                         type="button"
@@ -489,14 +525,22 @@ const Login = () => {
                       </span>
                       <input
                         id="signup-confirm"
-                        type={showPassword ? "text" : "password"}
+                        type={showConfirmPassword ? "text" : "password"}
                         autoComplete="new-password"
                         placeholder="Re-enter"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         disabled={loading}
-                        className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
+                        className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-11 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-sti-gold focus:ring-2 focus:ring-sti-gold/20 disabled:opacity-60"
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword((prev) => !prev)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition hover:text-gray-600"
+                        aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                      >
+                        {showConfirmPassword ? <IconEyeOff /> : <IconEye />}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -521,7 +565,7 @@ const Login = () => {
                         value={course}
                         onChange={(e) => setCourse(e.target.value)}
                         disabled={loading}
-                        className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
+                        className="block w-full rounded-xl border border-gray-200 py-3 pl-10 pr-4 text-sm font-medium text-gray-900 shadow-sm outline-none transition placeholder:text-gray-400 focus:border-sti-gold focus:ring-2 focus:ring-sti-gold/20 disabled:opacity-60"
                       />
                     </div>
                   </div>
@@ -537,7 +581,7 @@ const Login = () => {
                       value={yearLevel}
                       onChange={(e) => setYearLevel(e.target.value)}
                       disabled={loading}
-                      className="block w-full appearance-none rounded-xl border border-gray-200 bg-white py-3 pl-4 pr-8 text-sm font-medium text-gray-900 shadow-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 disabled:opacity-60"
+                      className="block w-full appearance-none rounded-xl border border-gray-200 bg-white py-3 pl-4 pr-8 text-sm font-medium text-gray-900 shadow-sm outline-none transition focus:border-sti-gold focus:ring-2 focus:ring-sti-gold/20 disabled:opacity-60"
                     >
                       <option value="">Select year</option>
                       {YEAR_LEVELS.map((y) => (
@@ -552,12 +596,12 @@ const Login = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-3.5 text-sm font-black text-white shadow-[0_4px_14px_rgba(37,99,235,0.39)] transition hover:-translate-y-0.5 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+                  className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-sti-gold py-3.5 text-sm font-black text-sti-blue shadow-lg shadow-sti-gold/40 transition hover:-translate-y-0.5 hover:bg-sti-gold-hover focus:outline-none focus:ring-2 focus:ring-sti-gold/50 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
                 >
                   {loading ? (
                     <>
                       <IconLoader className="h-4 w-4" />
-                      Creating account…
+                      Creating account...
                     </>
                   ) : (
                     "Create Account"
@@ -570,7 +614,7 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={() => switchMode("login")}
-                  className="font-bold text-blue-600 transition hover:text-blue-700"
+                  className="font-bold text-sti-blue transition hover:text-sti-blue-light"
                 >
                   Sign In
                 </button>

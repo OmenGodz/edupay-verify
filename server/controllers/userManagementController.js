@@ -1,4 +1,5 @@
 const User = require("../Models/User");
+const Notification = require("../Models/Notification");
 const bcrypt = require("bcryptjs");
 
 const ALLOWED_ROLES = ["student", "cashier", "admin", "teacher"];
@@ -8,6 +9,110 @@ const getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password").sort({ createdAt: -1 });
     res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// GET pending students (verificationStatus === "pending")
+const getPendingStudents = async (req, res) => {
+  try {
+    const students = await User.find({
+      role: "student",
+      verificationStatus: "pending",
+    })
+      .select("-password")
+      .sort({ createdAt: -1 });
+
+    res.json(students);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// PATCH verify/approve a student
+const verifyStudent = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    if (user.role !== "student") {
+      return res.status(400).json({ message: "Only student accounts can be verified." });
+    }
+
+    if (user.verificationStatus === "verified") {
+      return res.status(400).json({ message: "Student is already verified." });
+    }
+
+    user.verificationStatus = "verified";
+    user.verifiedBy = req.user.id;
+    user.verifiedAt = new Date();
+    user.rejectionReason = undefined;
+    await user.save();
+
+    // Create notification for the student
+    await Notification.create({
+      studentId: user.studentId,
+      studentName: user.name,
+      recipientRole: "student",
+      title: "Account Verified",
+      message: "Your account has been verified by the admin. You can now log in and use EduPay Verify.",
+    });
+
+    const result = user.toObject();
+    delete result.password;
+
+    res.json({ message: "Student verified successfully.", user: result });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// PATCH reject a student
+const rejectStudent = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { rejectionReason } = req.body;
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    if (user.role !== "student") {
+      return res.status(400).json({ message: "Only student accounts can be rejected." });
+    }
+
+    if (user.verificationStatus === "rejected") {
+      return res.status(400).json({ message: "Student is already rejected." });
+    }
+
+    user.verificationStatus = "rejected";
+    user.verifiedBy = req.user.id;
+    user.verifiedAt = new Date();
+    user.rejectionReason = rejectionReason || undefined;
+    await user.save();
+
+    // Create notification for the student
+    const reasonText = rejectionReason
+      ? ` Reason: ${rejectionReason}`
+      : "";
+    await Notification.create({
+      studentId: user.studentId,
+      studentName: user.name,
+      recipientRole: "student",
+      title: "Account Rejected",
+      message: `Your account registration has been rejected by the admin.${reasonText}`,
+    });
+
+    const result = user.toObject();
+    delete result.password;
+
+    res.json({ message: "Student rejected.", user: result });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -34,6 +139,7 @@ const createUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // Users created by super_admin are auto-verified
     const user = await User.create({
       studentId,
       name,
@@ -45,6 +151,7 @@ const createUser = async (req, res) => {
       semester,
       schoolYear,
       isActive: true,
+      verificationStatus: "verified",
     });
 
     const result = user.toObject();
@@ -151,6 +258,9 @@ const searchStudents = async (req, res) => {
 
 module.exports = {
   getAllUsers,
+  getPendingStudents,
+  verifyStudent,
+  rejectStudent,
   createUser,
   updateUser,
   deactivateUser,

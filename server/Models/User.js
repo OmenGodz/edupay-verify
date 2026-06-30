@@ -47,6 +47,28 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+
+    verificationStatus: {
+      type: String,
+      enum: ["pending", "verified", "rejected"],
+      default: "verified",
+    },
+
+    verifiedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: false,
+    },
+
+    verifiedAt: {
+      type: Date,
+      required: false,
+    },
+
+    rejectionReason: {
+      type: String,
+      required: false,
+    },
   },
   {
     timestamps: true,

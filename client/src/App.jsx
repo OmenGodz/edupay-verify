@@ -13,6 +13,7 @@ import ExamPermit from "./pages/ExamPermit";
 import PaymentHistory from "./pages/PaymentHistory";
 import SuperAdminDashboard from "./pages/SuperAdminDashboard";
 import UserManagement from "./pages/UserManagement";
+import PendingStudents from "./pages/PendingStudents";
 import TeacherProctor from "./pages/TeacherProctor";
 import ExamSchedule from "./pages/ExamSchedule";
 import AssignedExams from "./pages/AssignedExams";
@@ -124,6 +125,14 @@ function App() {
             element={
               <ProtectedRoute allowedRoles={["super_admin"]}>
                 <UserManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/pending-students"
+            element={
+              <ProtectedRoute allowedRoles={["super_admin"]}>
+                <PendingStudents />
               </ProtectedRoute>
             }
           />

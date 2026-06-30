@@ -4,6 +4,9 @@ const superAdminOnly = require("../middleware/superAdminOnly");
 const cashierOnly = require("../middleware/cashierOnly");
 const {
   getAllUsers,
+  getPendingStudents,
+  verifyStudent,
+  rejectStudent,
   createUser,
   updateUser,
   deactivateUser,
@@ -13,9 +16,12 @@ const {
 const router = express.Router();
 
 router.get("/", protect, superAdminOnly, getAllUsers);
+router.get("/pending-students", protect, superAdminOnly, getPendingStudents);
 router.get("/search", protect, cashierOnly, searchStudents);
 router.post("/", protect, superAdminOnly, createUser);
 router.patch("/:id", protect, superAdminOnly, updateUser);
+router.patch("/:id/verify", protect, superAdminOnly, verifyStudent);
+router.patch("/:id/reject", protect, superAdminOnly, rejectStudent);
 router.patch("/:id/deactivate", protect, superAdminOnly, deactivateUser);
 
 module.exports = router;
