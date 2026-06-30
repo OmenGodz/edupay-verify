@@ -178,6 +178,22 @@ async (req, res) => {
 
     await permit.save();
 
+    // Notify the student about the proctor's decision
+    const Notification = require("../Models/Notification");
+    const student = await User.findOne({ studentId: permit.studentId });
+
+    const isApproved = decision === "Approved";
+    const remarksText = remarks ? ` Remarks: ${remarks}` : "";
+    await Notification.create({
+      studentId: permit.studentId,
+      studentName: student?.name || permit.studentName,
+      recipientRole: "student",
+      title: isApproved ? "Exam Permit Approved" : "Exam Permit Rejected",
+      message: isApproved
+        ? `Your ${permit.examType} exam permit has been approved by ${teacher?.name || "a proctor"}.${remarksText}`
+        : `Your ${permit.examType} exam permit has been rejected by ${teacher?.name || "a proctor"}.${remarksText}`,
+    });
+
     res.json(permit);
   } catch (error) {
     res.status(500).json({

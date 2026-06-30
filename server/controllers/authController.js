@@ -52,6 +52,15 @@ const register = async (req, res) => {
       verificationStatus: "pending",
     });
 
+    const Notification = require("../Models/Notification");
+    await Notification.create({
+      studentId: user.studentId,
+      studentName: user.name,
+      recipientRole: "super_admin",
+      title: "New Student Registration",
+      message: `${user.name} (${user.studentId}) has registered and is pending verification.`,
+    });
+
     // Do NOT issue a JWT — account must be verified by admin first
     res.status(201).json({
       message:

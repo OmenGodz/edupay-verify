@@ -157,6 +157,17 @@ const createUser = async (req, res) => {
     const result = user.toObject();
     delete result.password;
 
+    // Send a welcome notification to the new user
+    if (["student", "cashier", "teacher"].includes(safeRole)) {
+      await Notification.create({
+        studentId: user.studentId,
+        studentName: user.name,
+        recipientRole: safeRole,
+        title: "Welcome to EduPay Verify",
+        message: `Your ${safeRole} account has been created by the administrator. You can now log in and start using the system.`,
+      });
+    }
+
     res.status(201).json(result);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -223,6 +234,17 @@ const deactivateUser = async (req, res) => {
 
     user.isActive = false;
     await user.save();
+
+    // Notify the user that their account has been deactivated
+    if (["student", "cashier", "teacher"].includes(user.role)) {
+      await Notification.create({
+        studentId: user.studentId,
+        studentName: user.name,
+        recipientRole: user.role,
+        title: "Account Deactivated",
+        message: "Your account has been deactivated by the administrator. Please contact support if you believe this is an error.",
+      });
+    }
 
     res.json({ message: "User deactivated successfully." });
   } catch (error) {

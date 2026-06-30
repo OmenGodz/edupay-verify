@@ -142,6 +142,20 @@ const updateExam = async (req, res) => {
 
     await exam.save();
 
+    // Notify the assigned proctor if exam details changed
+    if (exam.proctorId) {
+      const teacher = await User.findById(exam.proctorId);
+      if (teacher) {
+        await Notification.create({
+          studentId: teacher.studentId,
+          studentName: teacher.name,
+          recipientRole: "teacher",
+          title: "Exam Schedule Updated",
+          message: `The schedule for ${exam.subject} (${exam.subjectCode}) has been updated. Please check your assigned exams for the latest details.`,
+        });
+      }
+    }
+
     res.json(exam);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -202,7 +216,12 @@ const removeProctor = async (req, res) => {
       return res.status(404).json({ message: "Exam not found." });
     }
 
-    const proctorName = exam.proctorName;
+    // Look up the teacher before clearing so we can notify them
+    const previousProctorId = exam.proctorId;
+    let teacher = null;
+    if (previousProctorId) {
+      teacher = await User.findById(previousProctorId);
+    }
 
     exam.proctorId = null;
     exam.proctorName = null;
@@ -211,9 +230,10 @@ const removeProctor = async (req, res) => {
     await exam.save();
 
     // Create notification for teacher if there was one
-    if (proctorName) {
+    if (teacher) {
       await Notification.create({
-        studentName: proctorName,
+        studentId: teacher.studentId,
+        studentName: teacher.name,
         recipientRole: "teacher",
         title: "Exam Assignment Removed",
         message: `Your assignment as proctor for ${exam.subject} (${exam.subjectCode}) on ${exam.examDate.toLocaleDateString()} has been removed.`,
@@ -231,11 +251,27 @@ const deleteExam = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const exam = await Exam.findByIdAndDelete(id);
+    const exam = await Exam.findById(id);
 
     if (!exam) {
       return res.status(404).json({ message: "Exam not found." });
     }
+
+    // Notify the assigned proctor before deleting
+    if (exam.proctorId) {
+      const teacher = await User.findById(exam.proctorId);
+      if (teacher) {
+        await Notification.create({
+          studentId: teacher.studentId,
+          studentName: teacher.name,
+          recipientRole: "teacher",
+          title: "Exam Cancelled",
+          message: `The exam for ${exam.subject} (${exam.subjectCode}) on ${exam.examDate.toLocaleDateString()} at ${exam.schedule} has been cancelled. Your proctoring duty has been removed.`,
+        });
+      }
+    }
+
+    await Exam.findByIdAndDelete(id);
 
     res.json({ message: "Exam deleted successfully." });
   } catch (error) {

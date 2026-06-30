@@ -219,8 +219,10 @@ async (req, res) => {
 
     await Notification.create({
       studentId: payment.studentId,
+      studentName: payment.studentName,
+      recipientRole: "student",
       title: "Payment Approved",
-      message: "Your payment has been approved.",
+      message: `Your payment of ₱${payment.amount} for ${payment.paymentDescription || "payment"} has been approved.`,
     });
 
     await payment.save();
@@ -343,6 +345,8 @@ async (req, res) => {
 
     await Notification.create({
       studentId: payment.studentId,
+      studentName: payment.studentName,
+      recipientRole: "student",
       title: "Payment Rejected",
       message: remarksText,
     });
@@ -406,8 +410,10 @@ async (req, res) => {
 
     await Notification.create({
       studentId: studentId,
+      studentName: student.name,
+      recipientRole: "student",
       title: "Direct Payment Recorded",
-      message: `A direct payment of ₱${amount} has been recorded by the cashier.`,
+      message: `A direct payment of ₱${amount} for ${paymentDescription || "payment"} has been recorded by the cashier.`,
     });
 
     if (examCoverage) {
