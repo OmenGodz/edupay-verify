@@ -30,6 +30,11 @@ export const updateUser = async (id, data) => {
   return res.data;
 };
 
+export const resetUserPassword = async (id, password) => {
+  const res = await API.patch(`/users/${id}/reset-password`, { password });
+  return res.data;
+};
+
 export const deactivateUser = async (id) => {
   const res = await API.patch(`/users/${id}/deactivate`);
   return res.data;
